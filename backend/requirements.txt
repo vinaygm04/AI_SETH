@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+python-multipart
+tensorflow
+librosa
+soundfile
+scikit-learn
+numpy
+supabase
+python-dotenv
