@@ -7,7 +7,7 @@ services:
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: SUPABASE_URL
-        sync: false
+        value: https://gluwvackfywbzleuhcax.supabase.co
       - key: SUPABASE_SERVICE_ROLE_KEY
-        sync: false
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsdXd2YWNrZnl3YnpsZXVoY2F4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MTg2NTcwOSwiZXhwIjoyMTA3NDQxNzA5fQ.TUW0vRWcpGZ9zHzk_rOwoboXZQ3IO1biOgj4qg9YK5o
     healthCheckPath: /docs
