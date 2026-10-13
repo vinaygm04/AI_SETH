@@ -18,11 +18,10 @@ RUN pip install --no-cache-dir -r backend/requirements.txt
 # Set working directory to backend
 WORKDIR /app/backend
 
-# Expose HuggingFace Spaces default port
-EXPOSE 7860
-
-# Set default env vars (will be overridden by HF Secrets)
+# Set default env vars (overridden by Railway/HF environment)
 ENV SUPABASE_URL=""
 ENV SUPABASE_SERVICE_ROLE_KEY=""
+ENV PORT=8000
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
+# Use shell form so $PORT is expanded at runtime
+CMD uvicorn main:app --host 0.0.0.0 --port $PORT
