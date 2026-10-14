@@ -10,6 +10,23 @@ import tensorflow as tf
 from supabase_client import supabase
 import uuid
 
+# ── Keras compatibility patch ───────────────────────────────────────────────
+# Models saved with Keras 3.4+ include 'quantization_config' in Dense config.
+# Older Keras 3.x builds don't accept that kwarg, causing deserialization to
+# fail. We patch Dense.__init__ to silently drop the unknown argument so the
+# model loads regardless of the exact Keras sub-version on the server.
+try:
+    from keras.src.layers.core.dense import Dense as _Dense
+    _orig_dense_init = _Dense.__init__
+
+    def _patched_dense_init(self, *args, quantization_config=None, **kwargs):
+        _orig_dense_init(self, *args, **kwargs)
+
+    _Dense.__init__ = _patched_dense_init
+except Exception:
+    pass
+# ────────────────────────────────────────────────────────────────────────────
+
 security = HTTPBearer()
 
 def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
@@ -53,7 +70,7 @@ async def load_model():
     global model
     if os.path.exists(MODEL_PATH):
         print(f"Loading model from {MODEL_PATH}")
-        model = tf.keras.models.load_model(MODEL_PATH)
+        model = tf.keras.models.load_model(MODEL_PATH, compile=False)
         print("Model loaded successfully.")
     else:
         print(f"Warning: Model not found at {MODEL_PATH}")
